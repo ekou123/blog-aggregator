@@ -1,11 +1,16 @@
 package main
 
 import (
+	"database/sql"
 	"example.com/sql/commands"
 	"example.com/sql/internal/config"
+	"example.com/sql/internal/database"
 	"fmt"
+	_ "github.com/lib/pq"
 	"os"
 )
+
+const dbURL = "postgres://postgres:postgres@localhost:5432/gator"
 
 func main() {
 
@@ -14,23 +19,34 @@ func main() {
 		panic(err)
 	}
 
-	stateStruct := commands.State{
-		&cfg,
+	// Open database connection
+	db, err := sql.Open("postgres", cfg.DbUrl)
+	if err != nil {
+		fmt.Println("Error opening database:", err)
+		os.Exit(1)
+	}
+	defer db.Close()
+
+	dbQueries := database.New(db)
+
+	stateStruct := config.State{
+		Cfg: &cfg,
+		Db:  dbQueries,
 	}
 
 	cliCommands := commands.Commands{
-		map[string]func(*commands.State, commands.Command) error{},
+		map[string]func(*config.State, commands.Command) error{},
 	}
 
 	err = cliCommands.Register("login", commands.HandlerLogin)
 	if err != nil {
-		panic(err)
+		fmt.Println("Error registering command:", err)
+		os.Exit(1)
 	}
 
 	args := os.Args
 
 	commandName := args[1]
-
 	commandArgs := args[2:]
 
 	cmd := commands.Command{

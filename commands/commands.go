@@ -1,13 +1,13 @@
 package commands
 
 import (
-	"example.com/sql/internal/config"
 	"fmt"
 )
 
-type State struct {
-	Cfg *config.Config
-}
+//
+//type State struct {
+//	Cfg *config.Config
+//}
 
 type Command struct {
 	Name      string

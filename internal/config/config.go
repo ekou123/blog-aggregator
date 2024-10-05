@@ -2,6 +2,7 @@ package config
 
 import (
 	"encoding/json"
+	"example.com/sql/internal/database"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -12,6 +13,11 @@ const ConfigFileName = ".gatorconfig.json"
 type Config struct {
 	DbUrl string `json:"db_url"`
 	User  string `json:"current_user_name"`
+}
+
+type State struct {
+	Db  *database.Queries
+	Cfg *Config
 }
 
 func Read() (Config, error) {

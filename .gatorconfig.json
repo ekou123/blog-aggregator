@@ -1,1 +1,3 @@
-{"db_url":"postgres://example","current_user_name":"james"}
+{
+  "connectionString": "protocol://postgres:postgres@5432:port/database?sslmode=disable"
+}
