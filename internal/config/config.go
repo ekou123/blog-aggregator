@@ -2,7 +2,6 @@ package config
 
 import (
 	"encoding/json"
-	"example.com/sql/commands"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -89,27 +88,4 @@ func (c *Config) Save(filename string) error {
 	}
 
 	return os.WriteFile(filename, data, 0644)
-}
-
-func handlerLogin(s *commands.State, cmd commands.Command) error {
-	if s.Cfg == nil {
-		return fmt.Errorf("No config found")
-	}
-
-	if len(cmd.Arguments) != 1 {
-		return fmt.Errorf("No arguments passed to login")
-	}
-
-	username := cmd.Arguments[0]
-
-	s.Cfg.User = username
-
-	err := s.Cfg.Save(ConfigFileName)
-	if err != nil {
-		return err
-	}
-
-	fmt.Printf("User set to: %s\n", username)
-
-	return nil
 }
