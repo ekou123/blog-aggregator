@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"example.com/sql/internal/config"
 	"fmt"
 )
 
@@ -15,10 +16,10 @@ type Command struct {
 }
 
 type Commands struct {
-	CLICommands map[string]func(*State, Command) error
+	CLICommands map[string]func(*config.State, Command) error
 }
 
-func (c *Commands) Register(name string, f func(*State, Command) error) error {
+func (c *Commands) Register(name string, f func(*config.State, Command) error) error {
 	if name == "" {
 		return fmt.Errorf("no function name provided. please check function name")
 	}
@@ -28,7 +29,7 @@ func (c *Commands) Register(name string, f func(*State, Command) error) error {
 	return nil
 }
 
-func (c *Commands) Run(s *State, cmd Command) error {
+func (c *Commands) Run(s *config.State, cmd Command) error {
 	handler, ok := c.CLICommands[cmd.Name]
 	if !ok {
 		return fmt.Errorf("command %s not found", cmd.Name)
